@@ -1,0 +1,59 @@
+@font-face {
+    font-style: normal;
+    font-weight: normal;
+    font-family: 'Noto Nastaliq Urdu';
+    src: url('./fonts/NotoNastaliqUrdu-VariableFont_wght.ttf') format('truetype');
+}
+body {
+  margin: 0;
+  padding: 0;
+  color: #333;
+  direction: rtl;
+  background: #f4f4f4;
+  font-family: 'Noto Nastaliq Urdu', sans-serif;
+}
+header {
+  color: white;
+  padding: 20px 0;
+  text-align: center;
+  background: #007b5e;
+}
+main {
+  padding: 20px;
+  max-width: 600px;
+  margin: 20px auto;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+#question-section {
+  margin-bottom: 20px;
+}
+#options {
+  margin-top: 10px;
+}
+button {
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-left: 10px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  background: #007b5e;
+  display: inline-block;
+}
+button:hover {
+  background: #005f4a;
+}
+.hidden {
+  display: none;
+}
+#result {
+  text-align: center;
+}
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-thumb {
+  background: #999;
+}
