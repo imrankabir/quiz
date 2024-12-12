@@ -969,9 +969,6 @@ const questions = [
     },
 ];
 
-let index = 0;
-let score = 0;
-
 const scoreEle = document.querySelector('#score');
 const resultEle = document.querySelector('#result');
 const optionsEle = document.querySelector('#options');
@@ -987,6 +984,7 @@ const shuffle = a => {
 };
 
 const showQuestion = e => {
+    const { index } = get('index', {index: 0});
     const question = questions[index];
     questionEle.innerText = `${index + 1}. ${question.question}`;
     optionsEle.innerHTML = '';
@@ -1004,6 +1002,7 @@ const selectAnswer = (button, correctAnswer) => {
     buttons.forEach(btn => btn.disabled = true);
     if (button.innerText === correctAnswer) {
         score++;
+        set('score', {score});
         button.style.backgroundColor = '#28a745';
     } else {
         button.style.backgroundColor = '#dc3545';
@@ -1011,6 +1010,7 @@ const selectAnswer = (button, correctAnswer) => {
 };
 
 const showResult = e => {
+    const { score } = get('score', {score: 0});
     document.querySelector('#container').classList.add('hidden');
     resultEle.classList.remove('hidden');
     scoreEle.innerText = `${score} / ${questions.length}`;
@@ -1018,6 +1018,7 @@ const showResult = e => {
 
 nextButton.addEventListener('click', e => {
     index++;
+    set('index', {index});
     if (index < questions.length) {
         showQuestion();
     } else {
@@ -1026,8 +1027,8 @@ nextButton.addEventListener('click', e => {
 });
 
 document.querySelector('#restart-btn').addEventListener('click', e => {
-    index = 0;
-    score = 0;
+    set('index', {index:0});
+    set('score', {score:0});
     document.querySelector('#container').classList.remove('hidden');
     resultEle.classList.add('hidden');
     showQuestion();
