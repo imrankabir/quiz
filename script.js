@@ -969,11 +969,27 @@ const questions = [
     },
 ];
 
-const scoreEle = document.querySelector('#score');
-const resultEle = document.querySelector('#result');
+// const questions = [
+//     {
+//         question: "نبی اکرم ﷺ کی پیدائش کس سال ہوئی؟",
+//         options: ["570 عیسوی", "580 عیسوی", "590 عیسوی"],
+//         answer: "570 عیسوی",
+//     },
+//     {
+//         question: "نبی اکرم ﷺ کہاں پیدا ہوئے؟",
+//         options: ["مکہ", "مدینہ", "یروشلم"],
+//         answer: "مکہ",
+//     },
+//     {
+//         question: "نبی اکرم ﷺ کی پہلی زوجہ کا نام کیا تھا؟",
+//         options: ["حضرت خدیجہ رضی اللہ عنہا", "حضرت عائشہ رضی اللہ عنہا", "حضرت حفصہ رضی اللہ عنہا"],
+//         answer: "حضرت خدیجہ رضی اللہ عنہا",
+//     },
+// ];
+
 const optionsEle = document.querySelector('#options');
-const nextButton = document.querySelector('#next-btn');
 const questionEle = document.querySelector('#question');
+const containerEle = document.querySelector('#container');
 
 const shuffle = a => {
   for (let i = a.length - 1; i > 0; i--) {
@@ -983,57 +999,85 @@ const shuffle = a => {
   return a;
 };
 
-const showQuestion = e => {
-    const { index } = get('index', {index: 0});
+const showQuestion = index => {
     const question = questions[index];
     questionEle.innerText = `${index + 1}. ${question.question}`;
     optionsEle.innerHTML = '';
     shuffle(question.options).forEach(option => {
-        const button = document.createElement('button');
-        button.innerText = option;
-        button.classList.add('option-btn');
-        button.addEventListener('click', e => selectAnswer(button, question.answer));
-        optionsEle.appendChild(button);
+        const btn = document.createElement('button');
+        btn.innerText = option;
+        btn.classList.add('option-btn');
+        btn.addEventListener('click', e => selectAnswer(btn, question.answer, index));
+        optionsEle.appendChild(btn);
     });
 };
 
-const selectAnswer = (button, correctAnswer) => {
-    const buttons = document.querySelectorAll('.option-btn');
-    buttons.forEach(btn => btn.disabled = true);
-    if (button.innerText === correctAnswer) {
-        score++;
-        set('score', {score});
-        button.style.backgroundColor = '#28a745';
+const selectAnswer = (btn, c, i) => {
+    let { solved } = get('solved', {solved: []});
+    const s = btn.innerText;
+    const sc = s === c;
+    const current = solved.find(solve => solve.i === i);
+    if (current) {
+        const others = solved.filter(solve => solve.i !== i);
+        solved = [...others, {i, s, c, sc}];
     } else {
-        button.style.backgroundColor = '#dc3545';
+        solved.push({i, s, c, sc});
+    }
+    set('solved', {solved});
+    const score = solved.reduce((a, c) => a + (c.sc === true ? 1 : 0), 0);
+    set('score', {score});
+    showScores();
+    document.querySelectorAll('.option-btn').forEach(btn => btn.disabled = true);
+    if (sc) {
+        btn.style.backgroundColor = '#28a745';
+    } else {
+        btn.style.backgroundColor = '#dc3545';
     }
 };
 
-const showResult = e => {
+const showScores = e => {
     const { score } = get('score', {score: 0});
-    document.querySelector('#container').classList.add('hidden');
-    resultEle.classList.remove('hidden');
-    scoreEle.innerText = `${score} / ${questions.length}`;
+    let { solved } = get('solved', {solved: []});
+    const scores = document.querySelector('#scores');
+    scores.innerText = `(${solved.length} / ${score})`;
+    scores.classList.remove('hide');
 };
 
-nextButton.addEventListener('click', e => {
-    index++;
-    set('index', {index});
-    if (index < questions.length) {
-        showQuestion();
+document.querySelector('#next-btn').addEventListener('click', e => {
+    let { index } = get('index', {index: 0});
+    if (index === questions.length - 1) {
+        index = 0;
     } else {
-        showResult();
+        index++;
     }
+    showQuestion(index);
+    set('index', {index});
+    showScores(); 
+});
+
+document.querySelector('#prev-btn').addEventListener('click', e => {
+    let { index } = get('index', {index: 0});
+    if (index === 0) {
+        index = questions.length - 1;
+    } else {
+        index--;
+    }
+    showQuestion(index);
+    set('index', {index});
+    showScores();
 });
 
 document.querySelector('#restart-btn').addEventListener('click', e => {
     set('index', {index:0});
     set('score', {score:0});
-    document.querySelector('#container').classList.remove('hidden');
-    resultEle.classList.add('hidden');
-    showQuestion();
+    set('solved', {solved:[]});
+    index = 0;
+    showQuestion(index);
+    showScores();
 });
 
 (e => {
-    showQuestion();
+    let { index } = get('index', {index: 0});
+    showQuestion(index);
+    showScores();
 })();

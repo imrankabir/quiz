@@ -26,6 +26,9 @@ main {
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
+h1 span {
+    font-size: 1rem;
+}
 #question-section {
   margin-bottom: 20px;
 }
@@ -33,7 +36,7 @@ main {
   margin-top: 10px;
 }
 button {
-  color: white;
+  color: #fff;
   border: none;
   cursor: pointer;
   margin-left: 10px;
@@ -45,11 +48,15 @@ button {
 button:hover {
   background: #005f4a;
 }
-.hidden {
-  display: none;
+.secondary {
+    color: #007b5e;
+    background: #fff;
 }
-#result {
-  text-align: center;
+.secondary:hover {
+    background: #ddd;
+}
+.hide {
+  display: none;
 }
 ::-webkit-scrollbar {
   width: 4px;
