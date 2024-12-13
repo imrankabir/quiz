@@ -9,6 +9,7 @@ body {
   padding: 0;
   color: #333;
   direction: rtl;
+  user-select: none;
   background: #f4f4f4;
   font-family: 'Noto Nastaliq Urdu', sans-serif;
 }
